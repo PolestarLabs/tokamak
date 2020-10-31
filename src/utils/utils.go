@@ -8,23 +8,15 @@ import (
   "image/color"
   _ "image/jpeg"
   _ "image/png"
-  "golang.org/x/image/font"
 )
 
 import (
   "github.com/fogleman/gg"
   "github.com/disintegration/imaging"
-  //"github.com/golang/freetype/truetype"
 )
 
 type Utils struct {
   default_image image.Image
-  fontCache []Font
-}
-
-type Font struct {
-  font font.Face
-  path string
 }
 
 func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
@@ -53,10 +45,6 @@ func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
 func (util *Utils) GetColorLuminance(color color.RGBA) float64 {
   return float64(float64(0.299) * float64(color.R) + float64(0.587) * float64(color.G) + float64(0.114) * float64(color.B))
 }
-
-/*func (util Utils) GetFontFaceOrCreate(path string) font.Face {
-  append(util.fontCache, face)
-}*/
 
 func (util *Utils) GetCompatibleFontColor(hex_color string) string {
   c, err := util.ParseHexColor(hex_color)

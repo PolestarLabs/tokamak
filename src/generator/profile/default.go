@@ -32,6 +32,15 @@ func (p DefaultProfile) Render() image.Image {
   dc.DrawRoundedRectangle(180, 160, 170, 35, 5)
   dc.Fill()
   
+  // R RECT YEN
+  dc.SetRGBA(0, 0, 0, 150)
+  dc.DrawRoundedRectangle(500, 5, 90, 20, 10)
+  dc.Fill()
+  
+  // R RECT STICKER
+  dc.SetRGBA(0, 0, 0, 150)
+  dc.DrawRoundedRectangle(460, 30, 130, 130, 10)
+  dc.Fill()
   // WHITE CONTOURS
   dc.SetHexColor("ffffff")
   dc.SetLineWidth(6)
@@ -65,10 +74,17 @@ func (p DefaultProfile) Render() image.Image {
   dc.DrawCircle(float64(x), float64(y), 66)
   dc.Clip()
   dc.DrawImageAnchored(avatar, x, y, 0.5, 0.5)
+  dc.ResetClip()
   
   /* TEXT RENDERING SECTION */
   // USERNAME
+  e := dc.LoadFontFace("../assets/fonts/Poppins/Poppins-Bold.ttf", 23)
+  if e != nil {
+    panic(e)
+  }
+  
   dc.SetHexColor(p.Generator.Toolbox.GetCompatibleFontColor(p.FavColor))
+  dc.DrawStringAnchored(p.Name, 250, 174, 0.5, 0.5)
   
   dc.SavePNG("out.png")
   
