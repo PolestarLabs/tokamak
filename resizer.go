@@ -12,10 +12,10 @@ import (
   "github.com/disintegration/imaging"
 )
 func main () {
-  path := "./nyc.jpg"
-  x := 600
-  y := 190
-  save_to := "./assets/images/bgs/nyc_skyline.png"
+  path := "./menina.png"
+  x := 15
+  y := 15
+  save_to := "./assets/images/emojis/woman_laptop.png"
   
   img_reader, err := os.Open(path)
   if err != nil {

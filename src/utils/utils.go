@@ -8,6 +8,8 @@ import (
   "image/color"
   _ "image/jpeg"
   _ "image/png"
+  "os"
+  "unicode/utf8"
 )
 
 import (
@@ -17,6 +19,56 @@ import (
 
 type Utils struct {
   default_image image.Image
+  asset_cache map[string]image.Image
+}
+
+func (util *Utils) SafeDrawString(ctx *gg.Context, text string, x, y, w float64) {
+  ctext := text
+  
+  for ok := getWidth(ctx.MeasureString(ctext)) > w; ok; ok = getWidth(ctx.MeasureString(ctext)) > w {
+    ctext = util.TrimLastChar(ctext)
+  }
+  
+  if getWidth(ctx.MeasureString(text)) > w {
+    for z := 0; z < 3; z++ {
+      ctext = util.TrimLastChar(ctext)
+    }
+    ctext = ctext + "..."
+  }
+  ctx.DrawString(ctext, x, y)
+}
+
+func (util Utils) TrimLastChar(s string) string {
+  r, size := utf8.DecodeLastRuneInString(s)
+  if r == utf8.RuneError && (size == 0 || size == 1) {
+    size = 0
+  }
+  return s[:len(s)-size]
+}
+
+func getWidth(w, h float64) float64 {
+  return w
+}
+
+func (util *Utils) GetAsset(path string) image.Image {
+  v, ok := util.asset_cache[path]
+  if ok == true {
+    return v
+  }
+  
+  img_reader, err := os.Open("../assets/images/"+ path +".png")
+  if err != nil {
+    panic(err)
+  }
+  defer img_reader.Close()
+  
+  img, _, err := image.Decode(img_reader)
+  if err != nil {
+    panic(err)
+  }
+  
+  util.asset_cache[path] = img
+  return img
 }
 
 func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
@@ -101,5 +153,6 @@ func NewUtil () Utils {
   
   return Utils {
     default_image: def.Image(),
+    asset_cache: make(map[string]image.Image),
   }
 }
