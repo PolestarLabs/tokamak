@@ -7,14 +7,20 @@ import (
 
 import "github.com/fogleman/gg"
 
-type DefaultProfile struct {
-  Generator generator.Generator
-  AvatarURL, Background, Sticker string
-  Married bool
-  Name, AboutMe, FavColor, Money, PartnerName string
+type ProfileData struct {
+  AvatarURL string `json:"avatarUrl" form:"avatarUrl"`
+  Background string `json:"bgId" form:"bgId"`
+  Sticker string `json:"stickerId" form:"stickerId"`
+  Married bool `json:"married" form:"married"`
+  Name string `json:"name" form:"name"`
+  AboutMe string `json:"aboutMe" form:"aboutMe"`
+  FavColor string `json:"favColor" form:"favColor"`
+  Money string `json:"money" form:"money"`
+  Type string `json:"type" form:"type"`
+  PartnerName string `json:"partnerName" form:"partnerName"`
 }
 
-func (p DefaultProfile) Render() image.Image {
+func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
   dc := gg.NewContext(600, 400)
   // BASE COLOR
   dc.SetHexColor("212121")
@@ -23,7 +29,7 @@ func (p DefaultProfile) Render() image.Image {
   dc.LoadFontFace("../assets/fonts/Poppins/Poppins-Medium.ttf", 12)
   
   // BACKGROUND
-  img := p.Generator.Toolbox.GetAsset("bgs/"+ p.Background)
+  img := g.Toolbox.GetAsset("bgs/"+ p.Background)
   dc.DrawImage(img, 0, 0)
   rect := gg.NewContext(600, 190)
   rect.SetRGBA(0, 0, 0, 98)
@@ -53,11 +59,11 @@ func (p DefaultProfile) Render() image.Image {
     dc.Fill()
     
     // RING EMOJI / MARRIED
-    img = p.Generator.Toolbox.GetAsset("emojis/ring")
+    img = g.Toolbox.GetAsset("emojis/ring")
     dc.DrawImage(img, 470, 15)
     
     dc.SetHexColor("000000")
-    p.Generator.Toolbox.SafeDrawString(dc, p.PartnerName, 490, 26, 105)
+    g.Toolbox.SafeDrawString(dc, p.PartnerName, 490, 26, 105)
   }
   
   // R RECT YEN
@@ -74,7 +80,7 @@ func (p DefaultProfile) Render() image.Image {
   dc.DrawRoundedRectangle(350, 225, 225, 150, 20)
   dc.Fill()
   // STICKER DRAWING
-  img = p.Generator.Toolbox.GetAsset("stickers/"+ p.Sticker)
+  img = g.Toolbox.GetAsset("stickers/"+ p.Sticker)
   dc.DrawImage(img, 490, stickery)
   
   // WHITE CONTOURS
@@ -102,7 +108,7 @@ func (p DefaultProfile) Render() image.Image {
   
   /* EMOJIS (15x15) */
   // YEN/MONEY
-  img = p.Generator.Toolbox.GetAsset("emojis/money")
+  img = g.Toolbox.GetAsset("emojis/money")
   dc.DrawImage(img, 497, moneyy + 3)
   
   /* AVATAR DRAWING */
@@ -115,7 +121,7 @@ func (p DefaultProfile) Render() image.Image {
   dc.DrawCircle(float64(x), float64(y), 70)
   dc.Fill()
   
-  avatar := p.Generator.Toolbox.ReadImageFromURL(p.AvatarURL, avatarSize, avatarSize)
+  avatar := g.Toolbox.ReadImageFromURL(p.AvatarURL, avatarSize, avatarSize)
   dc.DrawCircle(float64(x), float64(y), 66)
   dc.Clip()
   dc.DrawImageAnchored(avatar, x, y, 0.5, 0.5)
@@ -126,10 +132,10 @@ func (p DefaultProfile) Render() image.Image {
   dc.DrawString(p.Money, 519, float64(moneyy) + 16)
   
   // "ABOUT" ME" @ about ME
-  img = p.Generator.Toolbox.GetAsset("emojis/woman_laptop")
+  img = g.Toolbox.GetAsset("emojis/woman_laptop")
   dc.DrawImage(img, 373, 219)
   
-  dc.SetHexColor(p.Generator.Toolbox.GetCompatibleFontColor(p.FavColor))
+  dc.SetHexColor(g.Toolbox.GetCompatibleFontColor(p.FavColor))
   dc.DrawString("About me", 393, 231)
   
   dc.SetHexColor("ffffff")
@@ -140,10 +146,8 @@ func (p DefaultProfile) Render() image.Image {
   
   // USERNAME
   // FIND OUT WHICH ONE IS MORE VISIBLE WITH THE CURRENT COLOR SCHEME: BLACK OR WHITE.
-  dc.SetHexColor(p.Generator.Toolbox.GetCompatibleFontColor(p.FavColor))
-  p.Generator.Toolbox.SafeDrawString(dc, p.Name, 185, 183, 160)
-  
-  dc.SavePNG("out.png")
+  dc.SetHexColor(g.Toolbox.GetCompatibleFontColor(p.FavColor))
+  g.Toolbox.SafeDrawString(dc, p.Name, 185, 183, 160)
   
   return dc.Image()
 }

@@ -11,11 +11,17 @@ import (
 import (
   "github.com/disintegration/imaging"
 )
+
+// X×Y
+// Stickers: 100x100
+// Emojis: 15x15
+// Bgs: 600x190
+
 func main () {
-  path := "./menina.png"
-  x := 15
-  y := 15
-  save_to := "./assets/images/emojis/woman_laptop.png"
+  path := "./kali.png"
+  x := 100
+  y := 100
+  save_to := "./assets/images/stickers/kali_uchis_tyrant.png"
   
   img_reader, err := os.Open(path)
   if err != nil {
