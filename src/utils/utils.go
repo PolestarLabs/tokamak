@@ -56,7 +56,7 @@ func (util *Utils) GetAsset(path string) image.Image {
 		return v
 	}
 
-	imgReader, err := os.Open("./assets/images/" + path + ".png")
+	imgReader, err := os.Open("../assets/images/" + path + ".png")
 	if err != nil {
 		panic(err)
 	}
