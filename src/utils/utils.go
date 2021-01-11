@@ -4,6 +4,7 @@ import (
   "net/http"
   "math"
   "image"
+  "fmt"
   "errors"
   "image/color"
   _ "image/jpeg"
@@ -144,6 +145,31 @@ func (util *Utils) ParseHexColor(s string) (c color.RGBA, err error) {
   }
   
   return
+}
+
+func canFitHeightWise(ctx *gg.Context, lines []string, maxHeight, spacing int) bool {
+  sum := 0
+  for _, text := range lines {
+    _, h := ctx.MeasureString(text)
+    sum += int(h) + spacing
+  }
+  return sum < maxHeight
+}
+
+func (util *Utils) DrawTextWrapped(ctx *gg.Context, s string, x, y, height, width, spacing int) {
+  lines := ctx.WordWrap(s, float64(height))
+  var tbd []string
+
+  for len(lines) > 0 && canFitHeightWise(ctx, append(tbd, lines[0]), height, spacing) {
+    tbd = append(tbd, lines[0])
+    lines = lines[1:]
+  }
+  
+  currentY := y
+  for _, text := range tbd {
+    ctx.DrawString(text, float64(x), float64(currentY))
+    currentY += spacing
+  }
 }
 
 func NewUtil () Utils {

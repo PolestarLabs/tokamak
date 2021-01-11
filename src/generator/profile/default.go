@@ -139,15 +139,15 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
   dc.DrawString("About me", 393, 231)
   
   dc.SetHexColor("ffffff")
-  dc.DrawStringWrapped(p.AboutMe, 460, 275, 0.5, 0.5, 200, 1.5, gg.AlignLeft)
+  g.Toolbox.DrawTextWrapped(dc, p.AboutMe, 359, 252, 208, 410, 13)
   
   /* TEXT RENDERING SECTION */
   dc.LoadFontFace("../assets/fonts/Poppins/Poppins-Bold.ttf", 23)
   
   // USERNAME
-  // FIND OUT WHICH ONE IS MORE VISIBLE WITH THE CURRENT COLOR SCHEME: BLACK OR WHITE.
+  // you're the bird on the brim, hypnotized by the whirl
   dc.SetHexColor(g.Toolbox.GetCompatibleFontColor(p.FavColor))
-  g.Toolbox.SafeDrawString(dc, p.Name, 185, 183, 160)
+  g.Toolbox.SafeDrawString(dc, p.Name, 187, 183, 160)
   
   return dc.Image()
 }
