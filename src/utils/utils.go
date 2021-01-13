@@ -170,8 +170,8 @@ func canFitHeightWise(ctx *gg.Context, lines []string, maxHeight, spacing int) b
   return sum < maxHeight
 }
 
-func (util *Utils) DrawTextWrapped(ctx *gg.Context, s string, x, y, height, width, spacing int) {
-  lines := ctx.WordWrap(s, float64(height))
+func (util *Utils) DrawTextWrapped(ctx *gg.Context, s string, x, y, width, height, spacing int) {
+  lines := ctx.WordWrap(s, float64(width))
   var tbd []string
 
   for len(lines) > 0 && canFitHeightWise(ctx, append(tbd, lines[0]), height, spacing) {

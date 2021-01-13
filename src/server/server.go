@@ -52,5 +52,16 @@ func StartServer (port string) {
     return encoder.Encode(c.Context(), miscgenerator.RenderLicenseImage(gen, p))
   })
   
+  app.Post("/render/rize", func (c *fiber.Ctx) error {
+    p := new(miscgenerator.RizeData)
+    
+    if err := c.BodyParser(p); err != nil {
+      return err
+    }
+     
+    c.Set("Content-Type", "image/png")
+    
+    return encoder.Encode(c.Context(), miscgenerator.RenderRizeImage(gen, p))
+  })
   app.Listen(":" + port)
 }

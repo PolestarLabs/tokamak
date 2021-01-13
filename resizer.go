@@ -18,10 +18,10 @@ import (
 // Bgs: 600x190
 
 func main () {
-  path := "./license.png"
-  x := 800
-  y := 393
-  save_to := "./assets/images/foundation/license.png"
+  path := "./assets/images/bgs/mcthah_red.png"
+  x := 600
+  y := 190
+  save_to := "./assets/images/bgs/mctha_red.png"
   
   img_reader, err := os.Open(path)
   if err != nil {

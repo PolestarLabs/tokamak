@@ -109,7 +109,7 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
   /* EMOJIS (15x15) */
   // YEN/MONEY
   img = g.Toolbox.GetAsset("emojis/money")
-  dc.DrawImage(img, 497, moneyy + 3)
+  dc.DrawImage(img, 497, moneyy + 4)
   
   /* AVATAR DRAWING */
   avatarSize := 150
@@ -129,7 +129,7 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
   
   // YENS
   dc.SetHexColor("000000")
-  dc.DrawString(p.Money, 519, float64(moneyy) + 16)
+  dc.DrawString(p.Money, 519, float64(moneyy) + 16.506)
   
   // "ABOUT" ME" @ about ME
   img = g.Toolbox.GetAsset("emojis/woman_laptop")
@@ -139,7 +139,7 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
   dc.DrawString("About me", 393, 231)
   
   dc.SetHexColor("ffffff")
-  g.Toolbox.DrawTextWrapped(dc, p.AboutMe, 359, 252, 208, 410, 13)
+  g.Toolbox.DrawTextWrapped(dc, p.AboutMe, 359, 253, 208, 410, 13)
   
   /* TEXT RENDERING SECTION */
   dc.LoadFontFace("../assets/fonts/Poppins/Poppins-Bold.ttf", 23)
