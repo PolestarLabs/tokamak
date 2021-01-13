@@ -18,10 +18,10 @@ import (
 // Bgs: 600x190
 
 func main () {
-  path := "./kali.png"
-  x := 100
-  y := 100
-  save_to := "./assets/images/stickers/kali_uchis_tyrant.png"
+  path := "./license.png"
+  x := 800
+  y := 393
+  save_to := "./assets/images/foundation/license.png"
   
   img_reader, err := os.Open(path)
   if err != nil {

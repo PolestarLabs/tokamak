@@ -22,6 +22,22 @@ type Utils struct {
   asset_cache map[string]image.Image
 }
 
+func (util *Utils) SafeDrawStringAnchored(ctx *gg.Context, text string, x, y, w, ax, ay float64) {
+  ctext := text
+  
+  for ok := getWidth(ctx.MeasureString(ctext)) > w; ok; ok = getWidth(ctx.MeasureString(ctext)) > w {
+    ctext = util.TrimLastChar(ctext)
+  }
+  
+  if getWidth(ctx.MeasureString(text)) > w {
+    for z := 0; z < 3; z++ {
+      ctext = util.TrimLastChar(ctext)
+    }
+    ctext = ctext + "..."
+  }
+  ctx.DrawStringAnchored(ctext, x, y, ax, ay)
+}
+
 func (util *Utils) SafeDrawString(ctx *gg.Context, text string, x, y, w float64) {
   ctext := text
   
@@ -55,7 +71,6 @@ func (util *Utils) GetAsset(path string) image.Image {
   if ok == true {
     return v
   }
-  
   img_reader, err := os.Open("../assets/images/"+ path +".png")
   if err != nil {
     panic(err)

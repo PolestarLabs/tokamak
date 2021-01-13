@@ -6,6 +6,7 @@ import (
   "image"
   "image/png"
   "tokamak/src/generator/profile"
+  "tokamak/src/generator/misc"
 )
 
 func StartServer (port string) {
@@ -37,6 +38,18 @@ func StartServer (port string) {
     }
     
     return encoder.Encode(c.Context(), img)
+  })
+  
+  app.Post("/render/license", func (c *fiber.Ctx) error {
+    p := new(miscgenerator.LicenseData)
+    
+    if err := c.BodyParser(p); err != nil {
+      return err
+    }
+     
+    c.Set("Content-Type", "image/png")
+    
+    return encoder.Encode(c.Context(), miscgenerator.RenderLicenseImage(gen, p))
   })
   
   app.Listen(":" + port)
