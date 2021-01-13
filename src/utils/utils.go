@@ -4,7 +4,6 @@ import (
   "net/http"
   "math"
   "image"
-  "fmt"
   "errors"
   "image/color"
   _ "image/jpeg"
