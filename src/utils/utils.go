@@ -105,7 +105,7 @@ func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
       imagem = img
     }
   }
-  imagem = imaging.Fill(imagem, x, y, imaging.Center, imaging.Linear)
+  imagem = imaging.Fill(imagem, x, y, imaging.Center, imaging.NearestNeighbor)
   return imagem
 }
 

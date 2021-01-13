@@ -63,5 +63,17 @@ func StartServer (port string) {
     
     return encoder.Encode(c.Context(), miscgenerator.RenderRizeImage(gen, p))
   })
+  
+  app.Post("/render/laranjo", func (c *fiber.Ctx) error {
+    p := new(miscgenerator.LaranjoData)
+    
+    if err := c.BodyParser(p); err != nil {
+      return err
+    }
+     
+    c.Set("Content-Type", "image/png")
+    
+    return encoder.Encode(c.Context(), miscgenerator.RenderLaranjoImage(gen, p))
+  })
   app.Listen(":" + port)
 }

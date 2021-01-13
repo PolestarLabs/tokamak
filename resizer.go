@@ -18,10 +18,10 @@ import (
 // Bgs: 600x190
 
 func main () {
-  path := "./assets/images/bgs/mcthah_red.png"
-  x := 600
-  y := 190
-  save_to := "./assets/images/bgs/mctha_red.png"
+  path := "./laranjo.png"
+  x := 685
+  y := 494
+  save_to := "./assets/images/foundation/laranjo.png"
   
   img_reader, err := os.Open(path)
   if err != nil {
@@ -33,7 +33,8 @@ func main () {
   if err != nil {
     panic(err)
   }
-  img = imaging.Fill(img, x, y, imaging.Center, imaging.Linear)
+  print("WARNING: Using Lanczos to resample the image. This may take a few moments.\n")
+  img = imaging.Fill(img, x, y, imaging.Center, imaging.Lanczos)
   
   outf, err := os.Create(save_to)
   if err != nil {
@@ -45,6 +46,6 @@ func main () {
   if err != nil {
     panic(err)
   } else {
-    print("done")
+    print("done\n")
   }
 }
