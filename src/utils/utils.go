@@ -73,13 +73,13 @@ func (util *Utils) GetAsset(path string) image.Image {
   }
   img_reader, err := os.Open("../assets/images/"+ path +".png")
   if err != nil {
-    panic(err)
+    return util.default_image
   }
   defer img_reader.Close()
   
   img, _, err := image.Decode(img_reader)
   if err != nil {
-    panic(err)
+    return util.default_image
   }
   
   util.asset_cache[path] = img
@@ -91,7 +91,7 @@ func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
   
   res, err := http.Get(url)
   if err != nil {
-    panic(err)
+    return util.default_image
     imagem = util.default_image
   }
   defer res.Body.Close()
@@ -99,7 +99,7 @@ func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
   if imagem == nil {
     img, _, err := image.Decode(res.Body)
     if err != nil {
-      panic(err)
+      return util.default_image
       imagem = util.default_image
     } else {
       imagem = img
@@ -187,7 +187,7 @@ func (util *Utils) DrawTextWrapped(ctx *gg.Context, s string, x, y, width, heigh
 }
 
 func NewUtil () Utils {
-  def := gg.NewContext(1000, 1000)
+  def := gg.NewContext(800, 800)
   def.SetRGB(0.2, 0.2, 0.2)
   def.Clear()
   

@@ -18,10 +18,10 @@ import (
 // Bgs: 600x190
 
 func main () {
-  path := "./laranjo.png"
-  x := 685
-  y := 494
-  save_to := "./assets/images/foundation/laranjo.png"
+  path := "./assets/images/badges/bot_developer.png"
+  x := 30
+  y := 30
+  save_to := "./assets/images/badges/bot_developer.png"
   
   img_reader, err := os.Open(path)
   if err != nil {

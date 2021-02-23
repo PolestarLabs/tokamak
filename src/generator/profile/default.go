@@ -17,6 +17,7 @@ type ProfileData struct {
   FavColor string `json:"favColor" form:"favColor"`
   Money string `json:"money" form:"money"`
   Type string `json:"type" form:"type"`
+  Badges []string `json:"badges" form:"badges"`
   PartnerName string `json:"partnerName" form:"partnerName"`
 }
 
@@ -79,6 +80,7 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
   dc.SetRGBA(0, 0, 0, 180)
   dc.DrawRoundedRectangle(350, 225, 225, 150, 20)
   dc.Fill()
+  
   // STICKER DRAWING
   img = g.Toolbox.GetAsset("stickers/"+ p.Sticker)
   dc.DrawImage(img, 490, stickery)
@@ -104,6 +106,11 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
   // ABOUT ME
   dc.SetHexColor(p.FavColor)
   dc.DrawRoundedRectangle(365, 217, 110, 20, 10)
+  dc.Fill()
+  
+  // ABOUT ME (EMOJI WHITE CIRCLE)
+  dc.SetHexColor("ffffff")
+  dc.DrawCircle(381, 227, 11)
   dc.Fill()
   
   /* EMOJIS (15x15) */
@@ -136,10 +143,43 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
   dc.DrawImage(img, 373, 219)
   
   dc.SetHexColor(g.Toolbox.GetCompatibleFontColor(p.FavColor))
-  dc.DrawString("About me", 393, 231)
+  dc.DrawString("About me", 398, 231)
   
   dc.SetHexColor("ffffff")
-  g.Toolbox.DrawTextWrapped(dc, p.AboutMe, 359, 253, 208, 410, 13)
+  g.Toolbox.DrawTextWrapped(dc, p.AboutMe, 360, 255, 208, 408, 13)
+  
+  /* BADGES */
+  bx := 25.0
+  by := 275.0
+  badgesizex := 35.0
+  badgesizey := 30.0
+  badgespacing := 15.0
+  spacebtwedge := 10.0
+  recsizex := 175.0
+  
+  recsizey := badgesizey * 2 + badgespacing
+  // R RECT BADGES BLUR
+  dc.SetRGBA(0, 0, 0, 180) // 225 150
+  dc.DrawRoundedRectangle(bx, by, bx + recsizex, by - recsizex - 5, 20)
+  dc.Fill()
+  
+  cxpos := bx + spacebtwedge
+  cypos := by + spacebtwedge
+  
+  for _, b := range p.Badges {
+    if b != "" {
+      dc.DrawImage(g.Toolbox.GetAsset("badges/"+ b), int(cxpos), int(cypos))
+    }
+    
+    cxpos = cxpos + badgesizex + badgespacing
+    if cxpos > bx + spacebtwedge + recsizex {
+      cypos = cypos + badgesizey + badgespacing
+      cxpos = bx + spacebtwedge
+      if cypos > by + spacebtwedge + recsizey {
+        break // if we run out of space, break the loop 
+      }
+    }
+  }
   
   /* TEXT RENDERING SECTION */
   dc.LoadFontFace("../assets/fonts/Poppins/Poppins-Bold.ttf", 23)
