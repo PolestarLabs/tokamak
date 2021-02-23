@@ -1,7 +1,7 @@
 package main
 
 import (
-  "tokamak/src/server"
+	"tokamak/src/server"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	  Married: true,
 	  PartnerName: "Myseljsjsnsksnajamsnkeksf",
 	}
-	
+
 	gen.Render()*/
 	server.StartServer("1234")
 }
