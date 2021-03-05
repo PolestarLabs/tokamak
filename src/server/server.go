@@ -47,14 +47,20 @@ func StartServer(port string) {
 		c.Set("Content-Type", "image/png")
 
 		switch p.Type {
-		case "default":
-			img = profilegenerator.RenderDefaultProfile(gen, p)
-		default:
-			img = profilegenerator.RenderDefaultProfile(gen, p)
+			case "default":
+				img = profilegenerator.RenderDefaultProfile(gen, p)
+			case "modern":
+				img = profilegenerator.RenderModernProfile(gen, p)
+				break;
+			default:
+				img = profilegenerator.RenderDefaultProfile(gen, p)
 		}
 
 		return encoder.Encode(c.Context(), img)
 	})
+
+
+
 
 	app.Post("/render/license", func(c *fiber.Ctx) error {
 		p := new(miscgenerator.LicenseData)
