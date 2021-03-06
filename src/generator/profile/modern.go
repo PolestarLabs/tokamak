@@ -28,8 +28,6 @@ func RenderModernProfile(g generator.Generator, p *ProfileData) image.Image {
 	
 	/* BACKGROUND */
 	img := g.Toolbox.GetAsset("bgs/" + p.Background)
-	dc.DrawImage(img, 0, 0)
-
 
 
 	dc.LoadFontFace("../assets/fonts/Ghost/iknowaghost.ttf", 36) // Load First Font
