@@ -3,9 +3,8 @@ package profilegenerator
 import (
 	"image"
 	"tokamak/src/generator"
+	"github.com/fogleman/gg"
 )
-
-import "github.com/fogleman/gg"
 
 type ProfileData struct {
 	AvatarURL   string   `json:"avatarUrl" form:"avatarUrl"`
@@ -191,3 +190,6 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
 
 	return dc.Image()
 }
+
+
+
