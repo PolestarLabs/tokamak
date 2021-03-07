@@ -50,8 +50,9 @@ func StartServer(port string) {
 			case "default":
 				img = profilegenerator.RenderDefaultProfile(gen, p)
 			case "modern":
-				img = profilegenerator.RenderModernProfile(gen, p)
-				break;
+				img = profilegenerator.RenderModernProfile(gen, p)		
+			case "profile_2":
+				img = profilegenerator.RenderProfileTwo(gen, p)
 			default:
 				img = profilegenerator.RenderDefaultProfile(gen, p)
 		}

@@ -13,7 +13,7 @@ import (
 /*
 *
 
-	© 2020
+	© 2021
 	This art was registered by NavyCake (Code of Art: 122503600)
 
 	CREATOR OF THIS PROFILE WAS CREATED BY NAVYCAKE. ANY REQUEST TO CHANGE THIS IMAGE WILL HAVE TO ASK FOR NAVYCAKE OR DANIELAGC AUTHORIZATION.
@@ -138,20 +138,26 @@ func RenderModernProfile(g generator.Generator, p *ProfileData) image.Image {
 
 	cxpos := bx + spacebtwedge
 	cypos := by + spacebtwedge
-	
-	for _, b := range p.Badges {
-		if b != "" {
-			dc.DrawImage(g.Toolbox.GetAsset("badges/modern/"+b), int(cxpos), int(cypos))
-		}
 
-		cxpos = cxpos + badgesizex + badgespacing
-		if cxpos > bx+spacebtwedge+recsizex {
-			cypos = cypos + badgesizey + badgespacing
-			cxpos = bx + spacebtwedge
-			if cypos > by+spacebtwedge+recsizey {
-				break // if we run out of space, break the loop
+	nb := 0
+	for _, b := range p.Badges {
+		nb++
+		if nb == 100 {
+		} else {
+			if b != "" {
+				dc.DrawImage(g.Toolbox.GetAsset("badges/profile_2/"+b), int(cxpos), int(cypos))
+			}
+	
+			cxpos = cxpos + badgesizex + badgespacing
+			if cxpos > bx+spacebtwedge+recsizex {
+				cypos = cypos + badgesizey + badgespacing
+				cxpos = bx + spacebtwedge
+				if cypos > by+spacebtwedge+recsizey {
+					break // if we run out of space, break the loop
+				}
 			}
 		}
+	
 	}
 
 
