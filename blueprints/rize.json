@@ -1,0 +1,27 @@
+{
+  "wh": [1192, 670],
+  "entities": [
+    {
+      "type": "image",
+      "url": "assets://foundation/rize",
+      "xy": [0, 0]
+    },
+    {
+      "type": "rotate",
+      "value": 0.1
+    },
+    {
+      "type": "text",
+      "content": "{{ .text }}",
+      "xy": [255, 93],
+      "maxwidth": 438,
+      "maxheight": 840,
+      "spacing": 26,
+      "color": "000000",
+      "font": {
+        "face": "Poppins/Poppins-Medium",
+        "size": 25
+      }
+    }
+  ]
+}

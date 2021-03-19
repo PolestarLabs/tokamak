@@ -1,4 +1,4 @@
-package utils
+package dynamicgen
 
 import (
 	"errors"
@@ -6,7 +6,6 @@ import (
 	"image/color"
 	_ "image/jpeg"
 	_ "image/png"
-	"io/fs"
 	"math"
 	"net/http"
 	"os"
@@ -23,36 +22,19 @@ type Utils struct {
 	asset_cache   map[string]image.Image
 }
 
-func (util *Utils) SafeDrawStringAnchored(ctx *gg.Context, text string, x, y, w, ax, ay float64) {
-	ctext := text
-
-	for ok := getWidth(ctx.MeasureString(ctext)) > w; ok; ok = getWidth(ctx.MeasureString(ctext)) > w {
-		ctext = util.TrimLastChar(ctext)
-	}
-
-	if getWidth(ctx.MeasureString(text)) > w {
-		for z := 0; z < 3; z++ {
-			ctext = util.TrimLastChar(ctext)
-		}
-		ctext = ctext + "..."
-	}
-	ctx.DrawStringAnchored(ctext, x, y, ax, ay)
-}
-
 func (util *Utils) SafeDrawString(ctx *gg.Context, text string, x, y, w float64) {
-	ctext := text
-
-	for ok := getWidth(ctx.MeasureString(ctext)) > w; ok; ok = getWidth(ctx.MeasureString(ctext)) > w {
-		ctext = util.TrimLastChar(ctext)
-	}
-
 	if getWidth(ctx.MeasureString(text)) > w {
-		for z := 0; z < 3; z++ {
-			ctext = util.TrimLastChar(ctext)
+		for cw := getWidth(ctx.MeasureString(text)); cw > w; cw = getWidth(ctx.MeasureString(text)) {
+			text = util.TrimLastChar(text)
 		}
-		ctext = ctext + "..."
+
+		for z := 0; z < 3; z++ {
+			text = util.TrimLastChar(text)
+		}
+		text = text + "..."
 	}
-	ctx.DrawString(ctext, x, y)
+
+	ctx.DrawString(text, x, y)
 }
 
 func (util Utils) TrimLastChar(s string) string {
@@ -72,7 +54,7 @@ func (util *Utils) GetAsset(path string) image.Image {
 	if ok == true {
 		return v
 	}
-	img_reader, err := os.Open("../assets/images/" + path + ".png")
+	img_reader, err := os.Open("./assets/images/" + path + ".png")
 	if err != nil {
 		return util.default_image
 	}
@@ -92,7 +74,6 @@ func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
 
 	res, err := http.Get(url)
 	if err != nil {
-		return util.default_image
 		imagem = util.default_image
 	}
 	defer res.Body.Close()
@@ -100,7 +81,6 @@ func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
 	if imagem == nil {
 		img, _, err := image.Decode(res.Body)
 		if err != nil {
-			return util.default_image
 			imagem = util.default_image
 		} else {
 			imagem = img
@@ -162,17 +142,17 @@ func (util *Utils) ParseHexColor(s string) (c color.RGBA, err error) {
 	return
 }
 
-func canFitHeightWise(ctx *gg.Context, lines []string, maxHeight, spacing int) bool {
-	sum := 0
+func canFitHeightWise(ctx *gg.Context, lines []string, maxHeight, spacing float64) bool {
+	sum := 0.0
 	for _, text := range lines {
 		_, h := ctx.MeasureString(text)
-		sum += int(h) + spacing
+		sum += float64(h) + spacing
 	}
 	return sum < maxHeight
 }
 
-func (util *Utils) DrawTextWrapped(ctx *gg.Context, s string, x, y, width, height, spacing int) {
-	lines := ctx.WordWrap(s, float64(width))
+func (util *Utils) DrawTextWrapped(ctx *gg.Context, s string, x, y, width, height, spacing float64) {
+	lines := ctx.WordWrap(s, width)
 	var tbd []string
 
 	for len(lines) > 0 && canFitHeightWise(ctx, append(tbd, lines[0]), height, spacing) {
@@ -182,32 +162,13 @@ func (util *Utils) DrawTextWrapped(ctx *gg.Context, s string, x, y, width, heigh
 
 	currentY := y
 	for _, text := range tbd {
-		ctx.DrawString(text, float64(x), float64(currentY))
+		ctx.DrawString(text, x, currentY)
 		currentY += spacing
 	}
 }
 
-func Find(slice []string, val string) (int, bool) {
-	for i, item := range slice {
-		if item == val {
-			return i, true
-		}
-	}
-	return -1, false
-}
-
-func FilterFileList(slice []fs.FileInfo) []string {
-	var s []string
-	for _, item := range slice {
-		if item.IsDir() == false {
-			s = append(s, item.Name())
-		}
-	}
-
-	return s
-}
 func NewUtil() Utils {
-	def := gg.NewContext(800, 800)
+	def := gg.NewContext(10, 10)
 	def.SetRGB(0.2, 0.2, 0.2)
 	def.Clear()
 

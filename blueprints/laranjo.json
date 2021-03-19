@@ -1,0 +1,23 @@
+{
+  "wh": [685, 494],
+  "entities": [
+    {
+      "type": "image",
+      "url": "assets://foundation/laranjo",
+      "xy": [0, 0]
+    },
+    {
+      "type": "text",
+      "content": "{{ .text }}",
+      "xy": [20, 30],
+      "maxwidth": 665,
+      "maxheight": 800,
+      "spacing": 26,
+      "color": "000000",
+      "font": {
+        "face": "Poppins/Poppins-Medium",
+        "size": 25
+      }
+    }
+  ]
+}
