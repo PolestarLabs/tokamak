@@ -3,6 +3,7 @@ package profilegenerator
 import (
 	"image"
 	"tokamak/src/generator"
+
 	"github.com/fogleman/gg"
 )
 
@@ -75,6 +76,16 @@ func RenderProfileTwo(g generator.Generator, p *ProfileData) image.Image {
 	dc.Clip()
 	dc.DrawImageAnchored(avatar, x, y, 0.5, 0.5)
 	dc.ResetClip()
+
+	if !(p.AvatarIcon == "") {
+		xIcon := 50
+		yIcon := 200
+		avatarIcon := g.Toolbox.ReadImageFromURL(p.AvatarIcon, 100, 100)
+		dc.DrawCircle(float64(xIcon), float64(yIcon), float64(40))
+		dc.Clip()
+		dc.DrawImageAnchored(avatarIcon, xIcon, yIcon, 0.5, 0.5)
+		dc.ResetClip()
+	}
 
 
 

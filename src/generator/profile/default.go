@@ -18,6 +18,7 @@ type ProfileData struct {
 	Type        string   `json:"type" form:"type"`
 	Badges      []string `json:"badges" form:"badges"`
 	PartnerName string   `json:"partnerName" form:"partnerName"`
+	AvatarIcon string   `json:"avatarIcon" form:"avatarIcon"`
 }
 
 func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
