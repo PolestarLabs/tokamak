@@ -4,21 +4,30 @@ import (
 	"image"
 	"tokamak/src/generator"
 	"github.com/fogleman/gg"
+	"github.com/disintegration/imaging"
 )
 
 type ProfileData struct {
-	AvatarURL   string   `json:"avatarUrl" form:"avatarUrl"`
-	Background  string   `json:"bgId" form:"bgId"`
-	Sticker     string   `json:"stickerId" form:"stickerId"`
-	Married     bool     `json:"married" form:"married"`
-	Name        string   `json:"name" form:"name"`
-	AboutMe     string   `json:"aboutMe" form:"aboutMe"`
-	FavColor    string   `json:"favColor" form:"favColor"`
-	Money       string   `json:"money" form:"money"`
-	Type        string   `json:"type" form:"type"`
-	Badges      []string `json:"badges" form:"badges"`
-	PartnerName string   `json:"partnerName" form:"partnerName"`
-	AvatarIcon string   `json:"avatarIcon" form:"avatarIcon"`
+	AvatarURL     string   `json:"avatarUrl" form:"avatarUrl"`
+	Background    string   `json:"bgId" form:"bgId"`
+	Sticker       string   `json:"stickerId" form:"stickerId"`
+	Married       bool     `json:"married" form:"married"`
+	Name          string   `json:"name" form:"name"`
+	AboutMe       string   `json:"aboutMe" form:"aboutMe"`
+	FavColor      string   `json:"favColor" form:"favColor"`
+	Money         string   `json:"money" form:"money"`
+	Type          string   `json:"type" form:"type"`
+	Badges        []string `json:"badges" form:"badges"`
+	PartnerName   string   `json:"partnerName" form:"partnerName"`
+	AvatarIcon    string   `json:"avatarIcon" form:"avatarIcon"`
+	SizeEmoji     int      `json:"sizeEmoji" form:"sizeEmoji"`
+	ListEmoji     []Emoji    `json:"listEmoji" form:"listEmoji"`
+}
+
+type Emoji struct {
+	Name   string   `json:"name" from:"name"`
+	Y      int    `json:"y" form:"y"`
+	X      int    `json:"x" form:"x"`
 }
 
 func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
@@ -107,6 +116,14 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
 	dc.SetHexColor(p.FavColor)
 	dc.DrawRoundedRectangle(365, 217, 110, 20, 10)
 	dc.Fill()
+
+
+
+	// Support for Emoji!
+	for _, b := range p.ListEmoji {
+		emojiGet := g.Toolbox.GetAsset("emojis/discord/" + b.Name)
+		dc.DrawImageAnchored(imaging.Fill(emojiGet, p.SizeEmoji, p.SizeEmoji, imaging.Center, imaging.NearestNeighbor), b.X, b.Y, 0, 0)
+	}
 
 	// ABOUT ME (EMOJI WHITE CIRCLE)
 	dc.SetHexColor("ffffff")

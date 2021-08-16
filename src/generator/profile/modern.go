@@ -114,7 +114,11 @@ func RenderModernProfile(g generator.Generator, p *ProfileData) image.Image {
 	dc.SetHexColor("#1d1c1d")
 	g.Toolbox.DrawTextWrapped(dc, p.AboutMe, 590, 256, 360, 250, 50)
 
-
+	// Support for Emoji!
+	for _, b := range p.ListEmoji {
+		emojiGet := g.Toolbox.GetAsset("emojis/discord/" + b.Name)
+		dc.DrawImageAnchored(imaging.Fill(emojiGet, p.SizeEmoji, p.SizeEmoji, imaging.Center, imaging.NearestNeighbor), b.X, b.Y, 0, 0)
+	}
 
 	/* Date	*/
 	dc.SetHexColor("#1d1c1d")
