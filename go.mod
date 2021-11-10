@@ -13,6 +13,7 @@ require (
 	github.com/gorilla/schema v1.2.0 // indirect
 	github.com/klauspost/compress v1.11.7 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.21.0 // indirect
 	github.com/valyala/tcplisten v0.0.0-20161114210144-ceec8f93295a // indirect

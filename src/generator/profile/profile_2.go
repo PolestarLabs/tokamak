@@ -3,7 +3,6 @@ package profilegenerator
 import (
 	"image"
 	"tokamak/src/generator"
-
 	"github.com/fogleman/gg"
 )
 
@@ -41,7 +40,6 @@ func RenderProfileTwo(g generator.Generator, p *ProfileData) image.Image {
 
 
 	/* Sticker */
-
 	img = g.Toolbox.GetAsset("stickers/modern/" + p.Sticker)
 	dc.DrawImage(img, 840, 437)
 
@@ -161,8 +159,6 @@ func RenderProfileTwo(g generator.Generator, p *ProfileData) image.Image {
 	}
 
 	
-
-
 
 
 	return dc.Image()
