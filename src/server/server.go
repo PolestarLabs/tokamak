@@ -67,12 +67,11 @@ func StartServer(port string) {
 
 		if c.Query("w", "0") != "0" {
 			if c.Query("h", "0") != "0" {
-
 				parseW, err := strconv.ParseUint(c.Query("w", "0"), 10, 32)
 				if err != nil {
 					return err
 				}
-				parseH, err := strconv.ParseUint(c.Query("w", "0"), 10, 32)
+				parseH, err := strconv.ParseUint(c.Query("h", "0"), 10, 32)
 				if err != nil {
 					return err
 				}
