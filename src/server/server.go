@@ -14,6 +14,8 @@ import (
 	"github.com/nfnt/resize"
 )
 
+
+
 func StartServer(port string) {
 	app := fiber.New()
 	gen := generator.NewGenerator()
@@ -81,6 +83,7 @@ func StartServer(port string) {
 					case "thumb":
 						newImage := resize.Thumbnail(uint(parseW), uint(parseH), img, resize.Lanczos3)
 						img = newImage
+
 					case "resize":
 						newImage := resize.Resize(uint(parseW), uint(parseH), img, resize.Lanczos3)
 						img = newImage
@@ -89,7 +92,6 @@ func StartServer(port string) {
 						return c.SendString("😳 Oops! You forgot something your cute.")
 					}
 				}
-			
 
 			}
 		}

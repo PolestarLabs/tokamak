@@ -11,11 +11,10 @@ import (
 	"net/http"
 	"os"
 	"unicode/utf8"
-)
 
-import (
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
+	"golang.org/x/image/webp"
 )
 
 type Utils struct {
@@ -89,7 +88,11 @@ func (util *Utils) GetAsset(path string) image.Image {
 
 func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
 	var imagem image.Image = nil
+	getImage, ok := util.asset_cache[url]
 
+	if ok == true {
+		return getImage
+	}
 	res, err := http.Get(url)
 	if err != nil {
 		return util.default_image
@@ -100,6 +103,14 @@ func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
 	if imagem == nil {
 		img, _, err := image.Decode(res.Body)
 		if err != nil {
+			// 	webp.Decode(r io.Reader)
+			webpData, err := webp.Decode(res.Body)
+			if err != nil {
+				return util.default_image
+				imagem = util.default_image
+			} else {
+				imagem = webpData
+			}
 			return util.default_image
 			imagem = util.default_image
 		} else {
@@ -107,6 +118,9 @@ func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
 		}
 	}
 	imagem = imaging.Fill(imagem, x, y, imaging.Center, imaging.NearestNeighbor)
+	if ok == false {
+		util.asset_cache[url] = imagem
+	}
 	return imagem
 }
 
@@ -206,6 +220,7 @@ func FilterFileList(slice []fs.FileInfo) []string {
 
 	return s
 }
+
 func NewUtil() Utils {
 	def := gg.NewContext(800, 800)
 	def.SetRGB(0.2, 0.2, 0.2)
