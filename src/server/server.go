@@ -5,19 +5,33 @@ import (
 	"image/png"
 	"io/ioutil"
 	"strconv"
+	"time"
 	"tokamak/src/generator"
 	miscgenerator "tokamak/src/generator/misc"
 	profilegenerator "tokamak/src/generator/profile"
 	"tokamak/src/utils"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cache"
+	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/nfnt/resize"
 )
 
-
-
 func StartServer(port string) {
 	app := fiber.New()
+	app.Use(cache.New(cache.Config{
+		Next: func(c *fiber.Ctx) bool {
+			return c.Query("refresh") == "true"
+		},
+		Expiration:   30 * time.Minute,
+		CacheControl: true,
+	}))
+
+	app.Use(compress.New(compress.Config{
+		Level: compress.LevelBestSpeed, // 1
+	}))
+
+	// app.Use(logger.New())
 	gen := generator.NewGenerator()
 	encoder := png.Encoder{
 		CompressionLevel: -1, // no compression.
@@ -133,5 +147,6 @@ func StartServer(port string) {
 
 		return encoder.Encode(c.Context(), miscgenerator.RenderLaranjoImage(gen, p))
 	})
+
 	app.Listen(":" + port)
 }
