@@ -14,6 +14,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/nfnt/resize"
 )
 
@@ -27,14 +28,16 @@ func StartServer(port string) {
 		CacheControl: true,
 	}))
 
+	app.Use(pprof.New())
 	app.Use(compress.New(compress.Config{
+		Next:  nil,
 		Level: compress.LevelBestSpeed, // 1
 	}))
 
 	// app.Use(logger.New())
 	gen := generator.NewGenerator()
 	encoder := png.Encoder{
-		CompressionLevel: -1, // no compression.
+		CompressionLevel: -2, // no compression.
 	}
 
 	app.Static("/static", "../assets/images")
@@ -109,6 +112,7 @@ func StartServer(port string) {
 
 			}
 		}
+
 		return encoder.Encode(c.Context(), img)
 	})
 
