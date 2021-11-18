@@ -5,4 +5,4 @@ echo "Issues: https://github.com/RabbitHouseCorp/tokamak/issues"
 echo "RabbitHouseCorp: https://github.com/RabbitHouseCorp"
 echo 
 echo 
-cd ./src && echo "[1/3] Running GO GET" && go get  && echo "[2/3] Install..." && go install && echo "[3/3] Ready! Tokamak ready."   && go run main.go
+cd ./src && echo "[1/3] Running GO GET" && go get  && echo "[2/3] Install..." && go install && echo "[3/3] Tokamak ready!"   && go run main.go
