@@ -3,13 +3,15 @@ package profilegenerator
 import (
 	"image"
 	"tokamak/src/generator"
+
 	"github.com/fogleman/gg"
 )
 
 type ProfileData struct {
 	AvatarURL   string   `json:"avatarUrl" form:"avatarUrl"`
 	Background  string   `json:"bgId" form:"bgId"`
-	Sticker     string   `json:"stickerId" form:"stickerId"`
+	Sticker     string   `json:"stickerId" form:"stickerId"` // Deprecated
+	Reps        string   `json:"reps" form:"reps"`           // New field
 	Married     bool     `json:"married" form:"married"`
 	Name        string   `json:"name" form:"name"`
 	AboutMe     string   `json:"aboutMe" form:"aboutMe"`
@@ -18,7 +20,7 @@ type ProfileData struct {
 	Type        string   `json:"type" form:"type"`
 	Badges      []string `json:"badges" form:"badges"`
 	PartnerName string   `json:"partnerName" form:"partnerName"`
-	AvatarIcon string   `json:"avatarIcon" form:"avatarIcon"`
+	AvatarIcon  string   `json:"avatarIcon" form:"avatarIcon"`
 }
 
 func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
@@ -191,6 +193,3 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
 
 	return dc.Image()
 }
-
-
-
