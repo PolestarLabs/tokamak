@@ -14,12 +14,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/nfnt/resize"
 )
 
 func StartServer(port string) {
 	app := fiber.New()
+	app.Get("/dashboard", monitor.New(monitor.Config{
+		APIOnly: true,
+	}))
 	app.Use(cache.New(cache.Config{
 		Next: func(c *fiber.Ctx) bool {
 			return c.Query("refresh") == "true"
@@ -27,6 +31,11 @@ func StartServer(port string) {
 		Expiration:   30 * time.Minute,
 		CacheControl: true,
 	}))
+
+	app.Use(func(c *fiber.Ctx) error {
+		c.Response().Header.Add("Cache-Time", "90000")
+		return c.Next()
+	})
 
 	app.Use(pprof.New())
 	app.Use(compress.New(compress.Config{
@@ -117,18 +126,50 @@ func StartServer(port string) {
 	})
 
 	app.Post("/render/license", func(c *fiber.Ctx) error {
+		c.Context().SetConnectionClose()
 		p := new(miscgenerator.LicenseData)
 
 		if err := c.BodyParser(p); err != nil {
 			return err
 		}
 
+		img := miscgenerator.RenderLicenseImage(gen, p)
+
 		c.Set("Content-Type", "image/png")
 
-		return encoder.Encode(c.Context(), miscgenerator.RenderLicenseImage(gen, p))
+		if c.Query("w", "0") != "0" {
+			if c.Query("h", "0") != "0" {
+				parseW, err := strconv.ParseUint(c.Query("w", "0"), 10, 32)
+				if err != nil {
+					return err
+				}
+				parseH, err := strconv.ParseUint(c.Query("h", "0"), 10, 32)
+				if err != nil {
+					return err
+				}
+
+				if c.Query("type", "0") != "0" {
+					switch c.Query("type", "nil") {
+					case "thumb":
+						newImage := resize.Thumbnail(uint(parseW), uint(parseH), img, resize.Lanczos3)
+						img = newImage
+
+					case "resize":
+						newImage := resize.Resize(uint(parseW), uint(parseH), img, resize.Lanczos3)
+						img = newImage
+					default:
+						c.Set("Content-Type", "text/plain; charset=utf-8")
+						return c.SendString("😳 Oops! You forgot something your cute.")
+					}
+				}
+
+			}
+		}
+		return encoder.Encode(c.Context(), img)
 	})
 
 	app.Post("/render/rize", func(c *fiber.Ctx) error {
+		c.Context().SetConnectionClose()
 		p := new(miscgenerator.RizeData)
 
 		if err := c.BodyParser(p); err != nil {
@@ -137,7 +178,42 @@ func StartServer(port string) {
 
 		c.Set("Content-Type", "image/png")
 
-		return encoder.Encode(c.Context(), miscgenerator.RenderRizeImage(gen, p))
+		if err := c.BodyParser(p); err != nil {
+			return err
+		}
+
+		img := miscgenerator.RenderRizeImage(gen, p)
+
+
+		if c.Query("w", "0") != "0" {
+			if c.Query("h", "0") != "0" {
+				parseW, err := strconv.ParseUint(c.Query("w", "0"), 10, 32)
+				if err != nil {
+					return err
+				}
+				parseH, err := strconv.ParseUint(c.Query("h", "0"), 10, 32)
+				if err != nil {
+					return err
+				}
+
+				if c.Query("type", "0") != "0" {
+					switch c.Query("type", "nil") {
+					case "thumb":
+						newImage := resize.Thumbnail(uint(parseW), uint(parseH), img, resize.Lanczos3)
+						img = newImage
+
+					case "resize":
+						newImage := resize.Resize(uint(parseW), uint(parseH), img, resize.Lanczos3)
+						img = newImage
+					default:
+						c.Set("Content-Type", "text/plain; charset=utf-8")
+						return c.SendString("😳 Oops! You forgot something your cute.")
+					}
+				}
+
+			}
+		}
+		return encoder.Encode(c.Context(), img)
 	})
 
 	app.Post("/render/laranjo", func(c *fiber.Ctx) error {
