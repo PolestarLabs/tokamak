@@ -9,7 +9,7 @@ require (
 	github.com/esimov/pigo v1.4.5 // indirect
 	github.com/fogleman/gg v1.3.0
 	github.com/gofiber/fiber v1.14.6 // indirect
-	github.com/gofiber/fiber/v2 v2.22.0
+	github.com/gofiber/fiber/v2 v2.24.0
 	github.com/gofiber/utils v0.1.2 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/gorilla/schema v1.2.0 // indirect
