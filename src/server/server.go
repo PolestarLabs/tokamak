@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"image"
 	"image/png"
 	"io/ioutil"
@@ -20,7 +21,11 @@ import (
 )
 
 func StartServer(port string) {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		StreamRequestBody: true,
+		ReduceMemoryUsage: true,
+		Prefork:           true,
+	})
 	app.Get("/dashboard", monitor.New(monitor.Config{
 		APIOnly: true,
 	}))
@@ -71,6 +76,7 @@ func StartServer(port string) {
 		p := new(profilegenerator.ProfileData)
 
 		if err := c.BodyParser(p); err != nil {
+			fmt.Println(err)
 			return err
 		}
 
@@ -97,10 +103,12 @@ func StartServer(port string) {
 			if c.Query("h", "0") != "0" {
 				parseW, err := strconv.ParseUint(c.Query("w", "0"), 10, 32)
 				if err != nil {
+					fmt.Println(err)
 					return err
 				}
 				parseH, err := strconv.ParseUint(c.Query("h", "0"), 10, 32)
 				if err != nil {
+					fmt.Println(err)
 					return err
 				}
 
@@ -130,6 +138,7 @@ func StartServer(port string) {
 		p := new(miscgenerator.LicenseData)
 
 		if err := c.BodyParser(p); err != nil {
+			fmt.Println(err)
 			return err
 		}
 
@@ -141,10 +150,12 @@ func StartServer(port string) {
 			if c.Query("h", "0") != "0" {
 				parseW, err := strconv.ParseUint(c.Query("w", "0"), 10, 32)
 				if err != nil {
+					fmt.Println(err)
 					return err
 				}
 				parseH, err := strconv.ParseUint(c.Query("h", "0"), 10, 32)
 				if err != nil {
+					fmt.Println(err)
 					return err
 				}
 
@@ -173,26 +184,29 @@ func StartServer(port string) {
 		p := new(miscgenerator.RizeData)
 
 		if err := c.BodyParser(p); err != nil {
+			fmt.Println(err)
 			return err
 		}
 
 		c.Set("Content-Type", "image/png")
 
 		if err := c.BodyParser(p); err != nil {
+			fmt.Println(err)
 			return err
 		}
 
 		img := miscgenerator.RenderRizeImage(gen, p)
 
-
 		if c.Query("w", "0") != "0" {
 			if c.Query("h", "0") != "0" {
 				parseW, err := strconv.ParseUint(c.Query("w", "0"), 10, 32)
 				if err != nil {
+					fmt.Println(err)
 					return err
 				}
 				parseH, err := strconv.ParseUint(c.Query("h", "0"), 10, 32)
 				if err != nil {
+					fmt.Println(err)
 					return err
 				}
 
@@ -220,6 +234,7 @@ func StartServer(port string) {
 		p := new(miscgenerator.LaranjoData)
 
 		if err := c.BodyParser(p); err != nil {
+			fmt.Println(err)
 			return err
 		}
 
