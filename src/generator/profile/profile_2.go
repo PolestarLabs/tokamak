@@ -2,11 +2,11 @@ package profilegenerator
 
 import (
 	"image"
+
 	"tokamak/src/generator"
 
 	"github.com/fogleman/gg"
 )
-
 
 func RenderProfileTwo(g generator.Generator, p *ProfileData) image.Image {
 	dc := gg.NewContext(1100, 720)
@@ -15,7 +15,7 @@ func RenderProfileTwo(g generator.Generator, p *ProfileData) image.Image {
 	img := g.Toolbox.GetAsset("bgs/profile_2/" + p.Background)
 
 	dc.DrawImage(img, 260, 0)
-	dc.LoadFontFace("../assets/fonts/Ghost/iknowaghost.ttf", 50)
+	g.AddFontInCtx(dc, "../assets/fonts/Ghost/iknowaghost.ttf", 50)
 	img = g.Toolbox.GetAsset("template/profile_2")
 	dc.DrawImage(img, 0, 0)
 
@@ -56,21 +56,21 @@ func RenderProfileTwo(g generator.Generator, p *ProfileData) image.Image {
 		avatarIcon := g.Toolbox.ReadImageFromURL(p.AvatarIcon, 100, 100)
 		dc.DrawCircle(float64(xIcon), float64(yIcon), float64(40))
 		dc.Clip()
-		dc.DrawImageAnchored(avatarIcon, xIcon, yIcon, 0.5, 0.5)
+		dc.DrawImageAnchored(avatarIcon, xIcon, yIcon, 0, 0)
 		dc.ResetClip()
 	}
 
 	/* NickName	*/
-	dc.LoadFontFace("../assets/fonts/Montserrat/Montserrat-ExtraLight.ttf", 30)
+	g.AddFontInCtx(dc, "../assets/fonts/Montserrat/Montserrat-ExtraLight.ttf", 30)
 	dc.SetHexColor(g.Toolbox.GetCompatibleFontColor("#ffff"))
 	dc.DrawString(p.Name, float64(25), float64(295))
 
 	/* Yens	*/
-	dc.LoadFontFace("../assets/fonts/Montserrat/Montserrat-ExtraLight.ttf", 24) // Default is 40px
+	g.AddFontInCtx(dc, "../assets/fonts/Montserrat/Montserrat-ExtraLight.ttf", 24)
 	g.Toolbox.DrawTextWrapped(dc, p.Money, 520, 306, 208, 408, 13)
 
 	/* About Me	*/
-	dc.LoadFontFace("../assets/fonts/Montserrat/Montserrat-Regular.ttf", 23)
+	g.AddFontInCtx(dc, "../assets/fonts/Montserrat/Montserrat-Regular.ttf", 23)
 	dc.SetHexColor(g.Toolbox.GetCompatibleFontColor("#ffff"))
 	g.Toolbox.DrawTextWrapped(dc, p.AboutMe, 25, 377, 500, 250, 28)
 

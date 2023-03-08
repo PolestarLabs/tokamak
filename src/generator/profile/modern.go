@@ -18,7 +18,7 @@ func RenderModernProfile(g generator.Generator, p *ProfileData) image.Image {
 	img := g.Toolbox.GetAsset("bgs/" + p.Background)
 
 
-	dc.LoadFontFace("../assets/fonts/Ghost/iknowaghost.ttf", 36) // Load First Font
+	g.AddFontInCtx(dc, "../assets/fonts/Ghost/iknowaghost.ttf", 36) // Load First Font
 
 	/* Married	*/
 	if p.Married {
@@ -67,7 +67,7 @@ func RenderModernProfile(g generator.Generator, p *ProfileData) image.Image {
 	
 
 	/* AVATAR DRAWING */
-	avatarSize := 270
+	avatarSize := 290
 	circleSize := float64(129)
 	x := 168
 	y := 181
@@ -95,7 +95,7 @@ func RenderModernProfile(g generator.Generator, p *ProfileData) image.Image {
 
 
 	/* Yens	*/ 
-	dc.LoadFontFace("../assets/fonts/Ghost/iknowaghost.ttf", 30) // Default is 40px
+	g.AddFontInCtx(dc, "../assets/fonts/Ghost/iknowaghost.ttf", 30) // Default is 40px
 	g.Toolbox.DrawTextWrapped(dc, p.Money, 140, 400, 208, 408, 13)
 
 	/* About Me	*/

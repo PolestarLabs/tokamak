@@ -23,13 +23,16 @@ type ProfileData struct {
 	AvatarIcon  string   `json:"avatarIcon" form:"avatarIcon"`
 }
 
-func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
+func RenderDefaultProfile(g *generator.Generator, p *ProfileData) image.Image {
 	dc := gg.NewContext(600, 400)
 	// BASE COLOR
 	dc.SetHexColor("212121")
 	dc.Clear()
 
-	dc.LoadFontFace("../assets/fonts/Poppins/Poppins-Medium.ttf", 12)
+	// Load Font
+	g.AddFontInCtx(dc, "../assets/fonts/Poppins/Poppins-Medium.ttf", 12)
+
+	
 
 	// BACKGROUND
 	img := g.Toolbox.GetAsset("bgs/" + p.Background)
@@ -184,7 +187,7 @@ func RenderDefaultProfile(g generator.Generator, p *ProfileData) image.Image {
 	}
 
 	/* TEXT RENDERING SECTION */
-	dc.LoadFontFace("../assets/fonts/Poppins/Poppins-Bold.ttf", 23)
+	g.AddFontInCtx(dc, "../assets/fonts/Poppins/Poppins-Bold.ttf", 23)
 
 	// USERNAME
 	// you're the bird on the brim, hypnotized by the whirl
