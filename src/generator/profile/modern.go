@@ -153,3 +153,5 @@ func RenderModernProfile(g generator.Generator, p *ProfileData) image.Image {
 
 	return dc.Image()
 }
+
+

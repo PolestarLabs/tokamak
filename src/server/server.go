@@ -5,8 +5,10 @@ import (
 	"image"
 	"image/png"
 	"io/ioutil"
+	"runtime"
 	"strconv"
 	"time"
+
 	"tokamak/src/generator"
 	miscgenerator "tokamak/src/generator/misc"
 	profilegenerator "tokamak/src/generator/profile"
@@ -84,19 +86,32 @@ func StartServer(port string) {
 
 		switch p.Type {
 		case "default":
-			c.Set("Content-Type", "image/png")
-			img = profilegenerator.RenderDefaultProfile(gen, p)
+			if p.Background != "chino_woaaah" {
+				c.Set("Content-Type", "image/png")
+				img = profilegenerator.RenderDefaultProfile(&gen, p, nil)
+			}
+
 		case "modern":
-			c.Set("Content-Type", "image/png")
+			if p.Background != "chino_woaaah" {
+				c.Set("Content-Type", "image/png")
+			}
 
 			img = profilegenerator.RenderModernProfile(gen, p)
 		case "profile_2":
-			c.Set("Content-Type", "image/webp")
+			if p.Background != "chino_woaaah" {
+				c.Set("Content-Type", "image/webp")
+			}
 
 			img = profilegenerator.RenderProfileTwo(gen, p)
 		default:
-			c.Set("Content-Type", "image/png")
-			img = profilegenerator.RenderDefaultProfile(gen, p)
+			if p.Background != "chino_woaaah" {
+				c.Set("Content-Type", "image/png")
+				img = profilegenerator.RenderDefaultProfile(&gen, p, nil)
+			}
+		}
+
+		if p.Background == "chino_woaaah" {
+			c.Set("Content-Type", "image/gif")
 		}
 
 		if c.Query("w", "0") != "0" {
@@ -130,6 +145,7 @@ func StartServer(port string) {
 			}
 		}
 
+		runtime.GC()
 		return encoder.Encode(c.Context(), img)
 	})
 
@@ -242,6 +258,19 @@ func StartServer(port string) {
 
 		return encoder.Encode(c.Context(), miscgenerator.RenderLaranjoImage(gen, p))
 	})
-
+	LoadFonts(&gen)
+	LoadImages(&gen)
+	runtime.GC()
 	app.Listen(":" + port)
+}
+
+func LoadImages(g *generator.Generator) {
+	g.LoadAssets()
+}
+
+func LoadFonts(g *generator.Generator) {
+	g.LoadFontFace("../assets/fonts/Poppins/Poppins-Medium.ttf", 12)
+	g.LoadFontFace("../assets/fonts/Poppins/Poppins-Bold.ttf", 23)
+	g.LoadFontFace("../assets/fonts/Ghost/iknowaghost.ttf", 36, 30)
+	g.LoadFontFace("../assets/fonts/Montserrat/Montserrat-ExtraLight.ttf", 30, 24, 23)
 }

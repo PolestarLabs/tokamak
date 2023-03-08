@@ -3,7 +3,6 @@ package profilegenerator
 import (
 	"image"
 	"tokamak/src/generator"
-
 	"github.com/fogleman/gg"
 )
 
@@ -23,7 +22,7 @@ type ProfileData struct {
 	AvatarIcon  string   `json:"avatarIcon" form:"avatarIcon"`
 }
 
-func RenderDefaultProfile(g *generator.Generator, p *ProfileData) image.Image {
+func RenderDefaultProfile(g *generator.Generator, p *ProfileData, imageBackroundAnimated image.Image) image.Image {
 	dc := gg.NewContext(600, 400)
 	// BASE COLOR
 	dc.SetHexColor("212121")
@@ -31,11 +30,14 @@ func RenderDefaultProfile(g *generator.Generator, p *ProfileData) image.Image {
 
 	// Load Font
 	g.AddFontInCtx(dc, "../assets/fonts/Poppins/Poppins-Medium.ttf", 12)
-
-	
-
+	var img image.Image
 	// BACKGROUND
-	img := g.Toolbox.GetAsset("bgs/" + p.Background)
+	if imageBackroundAnimated == nil {
+		img = g.Toolbox.GetAsset("bgs/" + p.Background)
+	} else {
+		img = imageBackroundAnimated
+	}
+
 	dc.DrawImage(img, 0, 0)
 	rect := gg.NewContext(600, 190)
 	rect.SetRGBA(0, 0, 0, 98)
