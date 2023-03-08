@@ -4,6 +4,7 @@ import (
 	"errors"
 	"image"
 	"image/color"
+	"image/gif"
 	_ "image/jpeg"
 	_ "image/png"
 	"io/fs"
@@ -12,14 +13,14 @@ import (
 	"os"
 	"unicode/utf8"
 
-	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
+	"github.com/nfnt/resize"
 	"golang.org/x/image/webp"
 )
 
 type Utils struct {
 	default_image image.Image
-	asset_cache   map[string]image.Image
+	asset_cache   map[string]*image.Image
 }
 
 func (util *Utils) SafeDrawStringAnchored(ctx *gg.Context, text string, x, y, w, ax, ay float64) {
@@ -69,7 +70,7 @@ func getWidth(w, h float64) float64 {
 func (util *Utils) GetAsset(path string) image.Image {
 	v, ok := util.asset_cache[path]
 	if ok == true {
-		return v
+		return *v
 	}
 	img_reader, err := os.Open("../assets/images/" + path + ".png")
 	if err != nil {
@@ -82,8 +83,24 @@ func (util *Utils) GetAsset(path string) image.Image {
 		return util.default_image
 	}
 
-	util.asset_cache[path] = img
-	return img
+	util.asset_cache[path] = &img
+	return resize.Resize(uint(600), uint(190), img, resize.Lanczos3)
+}
+
+func (util *Utils) GetGif(path string) gif.GIF {
+	gif_reader, err := os.Open("../assets/images/" + path + ".gif")
+	if err != nil {
+		println("error:", err)
+	}
+	defer gif_reader.Close()
+
+	img, err := gif.DecodeAll(gif_reader)
+	if err != nil {
+		println("error:", err)
+	}
+
+
+	return *img
 }
 
 func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
@@ -91,7 +108,7 @@ func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
 	getImage, ok := util.asset_cache[url]
 
 	if ok == true {
-		return getImage
+		return resize.Resize(uint(x), uint(y), *getImage, resize.Lanczos3)
 	}
 	res, err := http.Get(url)
 	if err != nil {
@@ -106,20 +123,21 @@ func (util *Utils) ReadImageFromURL(url string, x, y int) image.Image {
 			// 	webp.Decode(r io.Reader)
 			webpData, err := webp.Decode(res.Body)
 			if err != nil {
-				return util.default_image
 				imagem = util.default_image
+				return util.default_image
 			} else {
 				imagem = webpData
 			}
 			return util.default_image
-			imagem = util.default_image
 		} else {
 			imagem = img
 		}
 	}
-	imagem = imaging.Fill(imagem, x, y, imaging.Center, imaging.NearestNeighbor)
+
+	imagem = resize.Resize(uint(x), uint(y), imagem, resize.Lanczos3)
+
 	if ok == false {
-		util.asset_cache[url] = imagem
+		util.asset_cache[url] = &imagem
 	}
 	return imagem
 }
@@ -228,6 +246,6 @@ func NewUtil() Utils {
 
 	return Utils{
 		default_image: def.Image(),
-		asset_cache:   make(map[string]image.Image),
+		asset_cache:   make(map[string]*image.Image),
 	}
 }

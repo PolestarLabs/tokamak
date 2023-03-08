@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"io/ioutil"
+	"os"
 	"regexp"
 
 	"github.com/fogleman/gg"
@@ -37,6 +38,63 @@ type ImageAsset struct {
 
 func NewGenerator() Generator {
 	return GeneratorVar
+}
+
+func (g *Generator) LoadAssets() {
+	g.Toolbox.GetAsset("foundation/laranjo")
+	g.Toolbox.GetAsset("foundation/license")
+	g.Toolbox.GetAsset("foundation/rize")
+
+	filesBgs, _ := os.ReadDir("../assets/bgs")
+
+	for _, file := range filesBgs {
+		if !file.IsDir() {
+			g.Toolbox.GetAsset("bgs/" + file.Name())
+		}
+	}
+
+	filesBgs, _ = os.ReadDir("../assets/emojis")
+
+	for _, file := range filesBgs {
+		if !file.IsDir() {
+			g.Toolbox.GetAsset("emojis/" + file.Name())
+		}
+	}
+
+	filesBgs, _ = os.ReadDir("../assets/stickers")
+
+	for _, file := range filesBgs {
+		if !file.IsDir() {
+			g.Toolbox.GetAsset("stickers/" + file.Name())
+		}
+	}
+}
+
+func (generator *Generator) LoadFontFace(fontPath string, sizes ...int) {
+	regex := regexp.MustCompile("\\.\\.")
+	path := regex.ReplaceAllString(fontPath, "")
+	for _, value := range sizes {
+		fontBytes, err := ioutil.ReadFile(fontPath)
+		if err != nil {
+			break
+		}
+
+		fontObj, err := truetype.Parse(fontBytes)
+		if err != nil {
+			break
+		}
+
+		face := truetype.NewFace(fontObj, &truetype.Options{
+			Size:              float64(value),
+			Hinting:           font.HintingFull,
+			GlyphCacheEntries: 512,
+		})
+
+		generator.FontCache = append(generator.FontCache, &Font{
+			path: fmt.Sprintf(path, value),
+			face: face,
+		})
+	}
 }
 
 func (generator *Generator) AddFontInCtx(ctx *gg.Context, fontPath string, size float64) (*gg.Context, error) {
