@@ -84,8 +84,10 @@ func (util *Utils) GetAsset(path string) image.Image {
 	}
 
 	util.asset_cache[path] = &img
-	return resize.Resize(uint(600), uint(190), img, resize.Lanczos3)
+	return img
 }
+
+
 
 func (util *Utils) GetGif(path string) gif.GIF {
 	gif_reader, err := os.Open("../assets/images/" + path + ".gif")

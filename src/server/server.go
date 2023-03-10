@@ -23,6 +23,12 @@ import (
 )
 
 func StartServer(port string) {
+	gen := generator.NewGenerator()
+
+	// Loads
+	LoadFonts(&gen)
+	LoadImages(&gen)
+
 	app := fiber.New(fiber.Config{
 		StreamRequestBody: true,
 		ReduceMemoryUsage: true,
@@ -51,7 +57,6 @@ func StartServer(port string) {
 	}))
 
 	// app.Use(logger.New())
-	gen := generator.NewGenerator()
 	encoder := png.Encoder{
 		CompressionLevel: -2, // no compression.
 	}
@@ -75,6 +80,7 @@ func StartServer(port string) {
 	})
 
 	app.Post("/render/profile", func(c *fiber.Ctx) error {
+		c.Context().SetConnectionClose()
 		p := new(profilegenerator.ProfileData)
 
 		if err := c.BodyParser(p); err != nil {
@@ -247,6 +253,7 @@ func StartServer(port string) {
 	})
 
 	app.Post("/render/laranjo", func(c *fiber.Ctx) error {
+		c.Context().SetConnectionClose()
 		p := new(miscgenerator.LaranjoData)
 
 		if err := c.BodyParser(p); err != nil {
@@ -258,14 +265,13 @@ func StartServer(port string) {
 
 		return encoder.Encode(c.Context(), miscgenerator.RenderLaranjoImage(gen, p))
 	})
-	LoadFonts(&gen)
-	LoadImages(&gen)
-	runtime.GC()
+
 	app.Listen(":" + port)
 }
 
 func LoadImages(g *generator.Generator) {
 	g.LoadAssets()
+	runtime.GC()
 }
 
 func LoadFonts(g *generator.Generator) {

@@ -40,6 +40,7 @@ func NewGenerator() Generator {
 	return GeneratorVar
 }
 
+
 func (g *Generator) LoadAssets() {
 	g.Toolbox.GetAsset("foundation/laranjo")
 	g.Toolbox.GetAsset("foundation/license")
@@ -66,6 +67,22 @@ func (g *Generator) LoadAssets() {
 	for _, file := range filesBgs {
 		if !file.IsDir() {
 			g.Toolbox.GetAsset("stickers/" + file.Name())
+		}
+	}
+
+	filesBgs, _ = os.ReadDir("../assets/stickers/")
+
+	for _, file := range filesBgs {
+		if !file.IsDir() {
+			g.Toolbox.GetAsset("stickers/" + file.Name())
+		}
+	}
+
+	filesBgs, _ = os.ReadDir("../assets/stickers/modern")
+
+	for _, file := range filesBgs {
+		if !file.IsDir() {
+			g.Toolbox.GetAsset("stickers/modern" + file.Name())
 		}
 	}
 }
