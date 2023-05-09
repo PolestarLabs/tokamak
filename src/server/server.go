@@ -22,9 +22,18 @@ import (
 	"github.com/nfnt/resize"
 )
 
+func LoadList() []string {
+	files, err := ioutil.ReadDir("../assets/images/bgs")
+	if err != nil {
+		panic(err)
+		return nil
+	}
+	return utils.FilterFileList(files)
+}
+
 func StartServer(port string) {
 	gen := generator.NewGenerator()
-
+	bgs := LoadList()
 	// Loads
 	LoadFonts(&gen)
 	LoadImages(&gen)
@@ -65,6 +74,20 @@ func StartServer(port string) {
 	app.Get("/version", func(c *fiber.Ctx) error {
 		return c.SendString("tokamak v1.1-dev1 (fasthttp/fiber; golang)")
 	})
+
+	app.Get("/get_backgrounds/:background", func(c *fiber.Ctx) error {
+		if _, found := utils.Find(bgs, c.Params("background")); !found {
+			return c.SendStatus(404)
+		}
+		image, err := ioutil.ReadFile("../assets/images/bgs/" + c.Params("background"))
+
+		if err != nil {
+			return c.SendStatus(500)
+		}
+
+		return c.Send(image)
+	})
+
 	app.Get("/get_asset_list/:image", func(c *fiber.Ctx) error {
 		if _, found := utils.Find([]string{"foundation", "badges", "stickers", "bgs"}, c.Params("image")); !found {
 			return c.SendString("no 💋")
